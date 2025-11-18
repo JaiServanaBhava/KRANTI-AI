@@ -1,0 +1,22 @@
+from backend.app import battery_status
+from backend.app import bluetooth_status
+from backend.app.voice_recognition.voice_feedback import speak
+
+# ---------------- FILE MANAGEMENT IMPORTS ---------------- #
+from backend.file_management.create_file import create_file_or_folder
+from backend.file_management.delete_file import delete_file
+from backend.file_management.rename_file import rename_file
+from backend.file_management.read_file import read_file
+from backend.file_management.move_file import move_file
+from backend.file_management.search_file import search_file
+from backend.file_management.file_compressor import compress_file
+from backend.file_management.file_encryptor import encrypt_file
+from backend.file_management.recycle_bin import bin
+from backend.file_management.screenshot_manager import take_screenshot
+from backend.file_management.temp_cleaner import clean_temp
+from backend.file_management.large_files import find_large_files
+from backend.file_management.duplicate_finder import find_duplicates
+from backend.file_management.recent_files import recent_files
+from backend.file_management.file_metadata import inspect_metadata
+from backend.app.wifi_status import *
+from backend.app.battery_status import *

@@ -1,0 +1,25 @@
+# Minimal requirements for KRANTI AI project (add versions as needed)
+PyQt5
+vosk
+sounddevice
+pyttsx3
+pyautogui
+pyperclip
+PyGetWindow
+requests
+psutil
+speedtest-cli
+yt-dlp
+customtkinter
+tkcalendar
+pywhatkit
+Pillow
+cryptography
+Send2Trash
+plyer
+pycaw
+comtypes
+deep-translator
+python-dotenv
+clipboard
+# Note: Some packages (pycaw, comtypes, pywin32, etc.) are Windows-specific.
