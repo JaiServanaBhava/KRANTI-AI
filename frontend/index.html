@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRANTI AI</title>
+
+<link rel="stylesheet" href="style.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<style>
+
+</style>
+<script>
+let bridge = null;
+
+
+
+// ------------------- CONNECT PYTHON ↔ HTML -------------------
+document.addEventListener("DOMContentLoaded", function () {
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+
+        bridge = channel.objects.bridge;
+        console.log("Bridge Connected");
+
+        // Connect Chat Listener
+        if (bridge.newMessage) {
+            bridge.newMessage.connect((sender, text) => {
+                addMessage(sender, text);
+            });
+        }
+
+        // Start system info + clock
+        updateSystemInfo();
+        updateClock();
+
+        setInterval(updateClock, 1000);
+        setInterval(updateSystemInfo, 4000);  // FIXED SPELLING
+    });
+});
+
+// ------------------- SYSTEM CLOCK -------------------
+function updateClock() {
+    const now = new Date();
+    document.getElementById("currentTime").textContent = now.toLocaleTimeString();
+}
+
+// ------------------- SYSTEM INFO FROM PYTHON -------------------
+function updateSystemInfo() {
+    if (!bridge) return;
+
+    bridge.fetchSystemInfo().then(infoJSON => {
+        const info = JSON.parse(infoJSON);
+
+        document.getElementById("internetStatus").textContent = info.internet;
+        document.getElementById("cpuUsage").textContent = `CPU: ${info.cpu_usage}%`;
+        document.getElementById("memoryUsage").textContent = `RAM: ${info.memory_usage}%`;
+        document.getElementById("batteryStatus").textContent = `Battery: ${info.battery_status}`;
+        document.getElementById("storageUsage").textContent = `Storage: ${info.storage_usage}%`;
+        document.getElementById("tempStatus").textContent = `Temp: ${info.temperature}`;
+
+        document.getElementById("internetIcon").style.color =
+            info.internet === "Connected" ? "#10b981" : "#ef4444";
+
+        document.getElementById("cpuUsage").style.color =
+            info.cpu_usage > 80 ? "#ef4444" :
+            info.cpu_usage > 50 ? "#f59e0b" : "#10b981";
+
+        document.getElementById("memoryUsage").style.color =
+            info.memory_usage > 80 ? "#ef4444" :
+            info.memory_usage > 50 ? "#f59e0b" : "#10b981";
+
+        document.getElementById("storageUsage").style.color =
+            info.storage_usage > 80 ? "#ef4444" :
+            info.storage_usage > 50 ? "#f59e0b" : "#10b981";
+
+        const bat = parseInt(info.battery_status);
+        document.getElementById("batteryStatus").style.color =
+            bat < 20 ? "#ef4444" :
+            bat < 50 ? "#f59e0b" : "#10b981";
+
+    }).catch(err => console.error("Fetch error:", err));
+}
+
+// ------------------- CHAT FUNCTIONS -------------------
+function addMessage(sender, text) {
+    const box = document.getElementById("chatMessages");
+    if (!box) return;
+
+    const div = document.createElement("div");
+    div.className = sender === "User" ? "user-msg" : "ai-msg";
+    div.textContent = text;
+
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+}
+
+function sendChat() {
+    const input = document.getElementById("chatInput");
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    addMessage("User", msg);
+    input.value = "";
+
+    if (bridge && bridge.sendMessage) {
+        bridge.sendMessage(msg);
+    }
+}
+</script>
+
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="app-logo">
+            <div class="logo-icon">AI</div>
+            <span class="app-name">Kranti AI</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul>
+            <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" class="nav-link" data-page="chat"><i class="fas fa-comments"></i> Chat</a></li>
+            <li><a href="#" class="nav-link" data-page="about"><i class="fas fa-info-circle"></i> About</a></li>
+           
+        </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="status-indicator">
+            <div class="status-dot online"></div>
+            <span>AI Online</span>
+        </div>
+    </div>
+</div>
+
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+ <!-- Home Page -->
+        <div class="page active" id="home-page">
+            <div class="background-effects">
+                <div class="bg-gradient"></div>
+                <div class="bg-radial-1"></div>
+                <div class="bg-radial-2"></div>
+            </div>
+<!-- HOME PAGE -->
+<div class="home-content">
+     <div class="title-section">
+                    <h1 class="main-title">KRANTI AI</h1>
+                 
+                </div>
+                
+                <div class="hologram-center">
+                    <div class="hologram-container">
+                        <!-- Rotating glow rings -->
+                        <div class="glow-ring ring-1"></div>
+                        <div class="glow-ring ring-2"></div>
+                        <div class="glow-ring ring-3"></div>
+                        
+                        <!-- Sparking glow points -->
+                        <div class="spark-container">
+                            <div class="spark spark-1"></div>
+                            <div class="spark spark-2"></div>
+                            <div class="spark spark-3"></div>
+                            <div class="spark spark-4"></div>
+                        </div>
+                        
+                        <!-- Moving orbital circles -->
+                        <div class="orbital-circle orbit-1"></div>
+                        <div class="orbital-circle orbit-2"></div>
+                        <div class="orbital-circle orbit-3"></div>
+
+                        <!-- Central hologram image -->
+                        <div class="hologram-image">
+                            <img src="as.jpeg" alt="AI Hologram">
+                        </div>
+                        
+                        <!-- Scanning lines -->
+                        <div class="scan-line scan-1"></div>
+                        <div class="scan-line scan-2"></div>
+                        
+                        <!-- Energy particles -->
+                        <div class="energy-particles">
+                            <div class="particle particle-1"></div>
+                            <div class="particle particle-2"></div>
+                            <div class="particle particle-3"></div>
+                            <div class="particle particle-4"></div>
+                            <div class="particle particle-5"></div>
+                        </div>
+                    </div>
+                </div>
+
+    <!-- SYSTEM INFO PANEL -->
+    <div class="system-info-panel">
+
+        <div class="system-info-item">
+            <i id="internetIcon" class="fas fa-wifi"></i>
+            <span id="internetStatus">Checking...</span>
+        </div>
+
+        <div class="system-info-item">
+            <i class="fas fa-clock"></i>
+            <span id="currentTime">--:--:--</span>
+        </div>
+
+        <div class="system-info-item">
+            <i class="fas fa-microchip"></i>
+            <span id="cpuUsage">CPU: --%</span>
+        </div>
+
+        <div class="system-info-item">
+            <i class="fas fa-memory"></i>
+            <span id="memoryUsage">RAM: --%</span>
+        </div>
+
+        <div class="system-info-item">
+            <i class="fas fa-battery-half"></i>
+            <span id="batteryStatus">Battery: --%</span>
+        </div>
+
+        <div class="system-info-item">
+            <i class="fas fa-hdd"></i>
+            <span id="storageUsage">Storage: --%</span>
+        </div>
+
+        <div class="system-info-item">
+            <i class="fas fa-thermometer-half"></i>
+            <span id="tempStatus">Temp: 28°C</span>
+        </div>
+
+    </div>
+</div>
+        </div>
+        <style>
+/* CHAT PAGE – Full Width + Dark Gradient */
+#chat-page {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, #001933, #003366, #00509e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+/* Chat Wrapper Box */
+.chat-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+}
+
+/* Header */
+.chat-header {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+/* Chat Box */
+.chat-box {
+    flex-grow: 1;
+    padding: 20px 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Scrollbar */
+.chat-box::-webkit-scrollbar {
+    width: 5px;
+}
+.chat-box::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+}
+
+/* COMMON MESSAGE STYLE */
+.user-msg, .ai-msg {
+    max-width: 75%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 15px;
+    line-height: 1.4;
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+/* USER MESSAGE (Blue WhatsApp Bubble Right) */
+.user-msg {
+    background: #027cff;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 0 8px rgba(0,140,255,0.4);
+}
+
+/* AI MESSAGE (Grey WhatsApp Bubble Left) */
+.ai-msg {
+    background: #e5e5ea;
+    color: black;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 0 8px rgba(255,255,255,0.25);
+}
+
+/* Fade Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Input Panel */
+.chat-input-panel {
+    display: flex;
+    padding: 12px;
+    background: rgba(0,0,0,0.35);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Input Field */
+.chat-input {
+    flex-grow: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 15px;
+}
+
+.chat-input::placeholder {
+    color: #cdd6e5;
+}
+
+/* Send Button */
+.chat-send-btn {
+    margin-left: 10px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 25px;
+    background: #0088ff;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 0 10px rgba(0,136,255,0.5);
+}
+
+.chat-send-btn:hover {
+    background: #006fe0;
+}
+</style>
+<!-- CHAT PAGE --> <div class="page" id="chat-page"> <div class="chat-wrapper"> <!-- Chat Title --> <div class="chat-header"> <i class="fas fa-comments"></i> Assistant Chat </div> <!-- Chat Messages Area --> <div class="chat-box" id="chatMessages"></div> <!-- Input Area --> <div class="chat-input-panel"> <input type="text" id="chatInput" class="chat-input" placeholder="Type your message..."> <button class="chat-send-btn" onclick="sendChat()"> <i class="fas fa-paper-plane"></i> </button> </div> </div> </div>
+
+
+
+<!-- SETTINGS PAGE -->
+<div class="page" id="about-page">
+    <div class="about-card">
+        <h2 class="about-title">⚡ About KRANTI AI</h2>
+
+        <p class="about-tagline">Your Personal Smart Assistant — Fast. Powerful. Human-like.</p>
+
+        <div class="about-section">
+            <h3>📌 Version</h3>
+            <ul>
+                <li>KRANTI AI v1.5 (Current)</li>
+                <li>KRANTI AI v1.0 — Performance Upgrade</li>
+                <li>KRANTI AI v0.2 — Stable Release</li>
+                <li>KRANTI AI v0.1 — Initial Launch</li>
+            </ul>
+        </div>
+
+        <div class="about-section">
+            <h3>✨ Features</h3>
+            <ul>
+                <li>Voice Assistant with Hotword</li>
+                <li>System Resource Monitoring</li>
+                <li>Remote Control</li>
+                <li>AI Chat Engine</li>
+                <li>File Managment</li>
+                <li>Beautiful UI in HTML + PyQt</li>
+            </ul>
+        </div>
+
+        <div class="about-footer">
+            Made with ❤️ by <span>Team Govinda</span>
+        </div>
+    </div>
+</div>
+
+</main>
+
+<script>
+
+// Robust navigation - safe: won't throw if element missing
+document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Update active menu visual
+        document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+        this.classList.add("active");
+
+        // Hide all pages first
+        // Explicitly hide pages (also clear inline display) to avoid
+        // any page-specific CSS forcing visibility (e.g. #chat-page {display:flex})
+        document.querySelectorAll(".page").forEach(p => {
+            p.classList.remove("active");
+            p.style.display = 'none';
+        });
+
+        // Build the page id and show it if exists
+        const pageId = (this.dataset.page || '').trim() + "-page";
+        const target = document.getElementById(pageId);
+        if (target) {
+            target.classList.add("active");
+            // set appropriate display mode for the page
+            // chat page uses flex layout; other pages use block
+            target.style.display = (target.id === 'chat-page') ? 'flex' : 'block';
+            // Optional: focus first input inside the page (helpful for chat)
+            const firstInput = target.querySelector('input, textarea, button, [tabindex]');
+            if (firstInput) firstInput.focus();
+        } else {
+            console.error(`Navigation: element with id "${pageId}" not found.`);
+        }
+    });
+});
+</script>
+
+
+
+</body>
+</html>
